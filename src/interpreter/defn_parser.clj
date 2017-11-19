@@ -1,16 +1,19 @@
 (ns interpreter.defn-parser)
 
-(declare parse-docstring
+(declare parse-name
+         parse-docstring
          parse-args
-         parse-bodies
-         wrap-defn-exp)
+         parse-bodies)
 
-(defn parse [raw-defn]
-  (-> {}
-      (parse-docstring raw-defn)
-      (parse-args raw-defn)
-      (parse-bodies raw-defn)
-      (wrap-defn-exp)))
+(defn parse [raw-defn parsers]
+  {:defn (-> {}
+             (parse-name raw-defn)
+             (parse-docstring raw-defn)
+             (parse-args raw-defn)
+             (parse-bodies raw-defn))})
+
+(defn- parse-name [defn-exp raw-defn]
+  (assoc defn-exp :name (nth raw-defn 1)))
 
 (defn- parse-docstring [defn-exp raw-defn]
   (if (string? (nth raw-defn 2))
@@ -30,6 +33,3 @@
     (if (not (empty? bodies))
       (assoc defn-exp :bodies bodies)
       (throw (IllegalArgumentException. "Empty defn.")))))
-
-(defn- wrap-defn-exp [defn-exp]
-  {:defn defn-exp})
