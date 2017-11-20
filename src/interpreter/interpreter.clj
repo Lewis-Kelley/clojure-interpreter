@@ -8,10 +8,11 @@
   (evaluate-exp expression
                 evaluators
                 (environments/create-empty-env)
-                (environments/extend-environment (environments/create-empty-env)
-                                                 {'x 3})))
+                (environments/create-empty-env)
+                (fn [result global-env]
+                  result)))
 
-(defn evaluate-exp [expression evaluators local-env global-env]
+(defn evaluate-exp [expression evaluators local-env global-env k]
   (if-let [evaluator (get evaluators (first expression))]
-    (evaluator (second expression) evaluators local-env global-env)
+    (evaluator (second expression) evaluators local-env global-env k)
     (throw (IllegalArgumentException. "Unrecognized expression type"))))
