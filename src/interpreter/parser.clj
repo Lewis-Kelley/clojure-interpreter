@@ -2,6 +2,7 @@
 
 (declare parse-exp
          parse-item
+         literal?
          parse-list
          parse-vector
          parse-map)
@@ -17,15 +18,21 @@
     true (parse-item raw-exp)))
 
 (defn- parse-item [raw-item]
-  {:item raw-item})
+  (if (literal? raw-item)
+    (list :literal {:value raw-item})
+    (list :variable {:symbol raw-item})))
+
+(defn- literal? [item]
+  (or (number? item) (nil? item)))
 
 (defn- parse-list [raw-list parsers]
   (if-let [parser (get parsers (first raw-list))]
     (parser raw-list parsers)
-    {:list (map-parse-exp raw-list parsers)}))
+    (list :application {:operator (parse-exp (first raw-list) parsers)
+                        :operands (map-parse-exp (next raw-list) parsers)})))
 
 (defn- parse-vector [raw-vector parsers]
-  {:vector (map-parse-exp raw-vector parsers)})
+  (list :vector {:elements (map-parse-exp raw-vector parsers)}))
 
 (defn- parse-map [raw-map]
-  {:map raw-map})
+  (list :map raw-map))

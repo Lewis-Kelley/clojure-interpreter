@@ -7,11 +7,11 @@
          parse-bodies)
 
 (defn parse [raw-defn parsers]
-  {:defn (-> {}
-             (parse-name raw-defn)
-             (parse-docstring raw-defn)
-             (parse-args raw-defn)
-             (parse-bodies raw-defn parsers))})
+  (list :defn (-> {}
+                  (parse-name raw-defn)
+                  (parse-docstring raw-defn)
+                  (parse-args raw-defn)
+                  (parse-bodies raw-defn parsers))))
 
 (defn- parse-name [defn-exp raw-defn]
   (assoc defn-exp :name (nth raw-defn 1)))
