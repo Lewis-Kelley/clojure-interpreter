@@ -29,7 +29,6 @@
 
 (defn- parse-bodies [defn-exp raw-defn parsers]
   (let [bodies (nthnext raw-defn (if (contains? defn-exp :docstring) 4 3))]
-    (println bodies)
     (if (not (empty? bodies))
       (assoc defn-exp :bodies (parser/map-parse-exp bodies parsers))
       (throw (IllegalArgumentException. "Empty defn.")))))
