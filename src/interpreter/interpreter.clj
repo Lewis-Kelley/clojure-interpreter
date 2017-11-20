@@ -32,13 +32,14 @@
   (fn [rest global-env]
     (continuations/apply-k k (cons initial-result rest) global-env)))
 
-(defn evaluate [expression evaluators]
+(defn evaluate [expression evaluators global-env]
   (evaluate-exp expression
                 evaluators
                 (environments/create-empty-env)
-                (environments/create-empty-env)
+                global-env
                 (fn [result global-env]
-                  result)))
+                  {:result result
+                   :global-env global-env})))
 
 (defn evaluate-exp [expression evaluators local-env global-env k]
   (if-let [evaluator (get evaluators (first expression))]

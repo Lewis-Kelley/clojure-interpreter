@@ -1,4 +1,5 @@
 (ns interpreter.core
+  (:require [interpreter.environments :as environments])
   (:require [interpreter.interpreter :as interpreter])
   (:require [interpreter.parser :as parser])
   (:require [interpreter.defn-parser :as defn-parser])
@@ -16,12 +17,12 @@
   (let [parsers (load-parsers)
         evaluators (load-evaluators)]
     (println "Ready!")
-    (loop []
-      (let [exp (read)]
-        (println "->" (-> exp
-                          (parser/parse-exp parsers)
-                          (interpreter/evaluate evaluators)))
-        (recur)))))
+    (loop [global-env (environments/create-empty-env)]
+      (let [evaluation (-> (read)
+                           (parser/parse-exp parsers)
+                           (interpreter/evaluate evaluators global-env))]
+        (println "->" (:result evaluation))
+        (recur (:global-env evaluation))))))
 
 (defn- load-parsers []
   {'defn defn-parser/parse
