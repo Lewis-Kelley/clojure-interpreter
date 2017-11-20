@@ -1,7 +1,7 @@
 (ns interpreter.environments)
 
 (defn create-empty-env []
-  (list :empty-env '()))
+  '(:empty-env))
 
 (defn extend-environment [old-environment new-env-map]
   (list :env (assoc new-env-map :extended-env old-environment)))

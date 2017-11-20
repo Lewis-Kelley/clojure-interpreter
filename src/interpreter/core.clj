@@ -5,7 +5,8 @@
   (:require [interpreter.if-parser :as if-parser])
   (:require [interpreter.literal-evaluator :as literal-evaluator])
   (:require [interpreter.variable-evaluator :as variable-evaluator])
-  (:require [interpreter.if-evaluator :as if-evaluator]))
+  (:require [interpreter.if-evaluator :as if-evaluator])
+  (:require [interpreter.defn-evaluator :as defn-evaluator]))
 
 (declare load-parsers
          load-evaluators)
@@ -28,4 +29,5 @@
 (defn- load-evaluators []
   {:literal literal-evaluator/evaluate
    :variable variable-evaluator/evaluate
-   :if if-evaluator/evaluate})
+   :if if-evaluator/evaluate
+   :defn defn-evaluator/evaluate})
